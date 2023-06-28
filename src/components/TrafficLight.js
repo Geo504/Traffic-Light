@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 
+import { Light } from './Light/Light';
+
 import "./TrafficLightStyle.css"
 
 export const TrafficLight = () => {
@@ -11,6 +13,8 @@ export const TrafficLight = () => {
   const [autoLightOn, setAutoLightOn] = useState(false);
   const [indexFuntions, setIndexFuntions] = useState(0);
   const timing = useRef();
+
+
 
   const funtionList = useMemo(()=>{
     const functionsLight = [setSwitchRedLight, setSwitchYellowLight, setSwitchGreenLight];
@@ -36,16 +40,20 @@ export const TrafficLight = () => {
     },3000);
   },[autoLightOn, indexFuntions]);
   
-  const turnOnRedLight = () =>{
+  const turnOnRedLight = (e) =>{
+    if (e.type === 'click' || e.key === 'Enter')
     setSwitchRedLight((prev) =>!prev);
   };
-  const turnOnYellowLight = () =>{
+  const turnOnYellowLight = (e) =>{
+    if (e.type === 'click' || e.key === 'Enter')
     setSwitchYellowLight((prev) =>!prev);
   };
-  const turnOnGreenLight = () =>{
+  const turnOnGreenLight = (e) =>{
+    if (e.type === 'click' || e.key === 'Enter')
     setSwitchGreenLight((prev) =>!prev);
   };
-  const turnOnBlueLight = () =>{
+  const turnOnBlueLight = (e) =>{
+    if (e.type === 'click' || e.key === 'Enter')
     setSwitchBlueLight((prev) =>!prev);
   };
 
@@ -62,25 +70,50 @@ export const TrafficLight = () => {
     }
   };
 
+
+
+  const lightsData = [
+    {
+      id: 1,
+      className: switchRedLight ? 'red_Light_on' : 'red_Light',
+      switchFunc: turnOnRedLight
+    },
+    {
+      id: 2,
+      className: switchYellowLight ? 'yellow_Light_on' : 'yellow_Light',
+      switchFunc: turnOnYellowLight
+    },
+    {
+      id: 3,
+      className: switchGreenLight ? 'green_Light_on' : 'green_Light',
+      switchFunc: turnOnGreenLight
+    },
+    {
+      id: 4,
+      className: `${switchBlueLight ? 'purple_Light_on' : 'purple_Light'} ${showLight?'show':'hide'}`,
+      switchFunc: turnOnBlueLight
+    }
+  ]
+
+
+
+
+
   return (
     <div className='container'>
       <div className='div_Container gap-2 col-8'>
         
         <div className='trafficLight col-12'>
-          <div 
-            className={`Light col-8 ${switchRedLight ? 'red_Light_on' : 'red_Light'}`}
-            onClick={turnOnRedLight}
-            ></div>
-          <div
-            className={`Light col-8 ${switchYellowLight ? 'yellow_Light_on' : 'yellow_Light'}`}
-            onClick={turnOnYellowLight}></div>
-          <div
-            className={`Light col-8 ${switchGreenLight ? 'green_Light_on' : 'green_Light'}`}
-            onClick={turnOnGreenLight}></div>
-          <div 
-            className={`Light col-8 ${switchBlueLight ? 'purple_Light_on' : 'purple_Light'} ${showLight?'show':'hide'}`}
-            onClick={turnOnBlueLight}
-            ></div>
+          {
+            lightsData.map((item=>
+              <Light
+                key={item.id}
+                tabIndex = {item.id}
+                className={`Light col-8 ${item.className}`}
+                turnOnFunc={item.switchFunc}
+              />
+            ))
+          }
         </div>
 
         <button
